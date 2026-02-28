@@ -9,23 +9,11 @@ class WebServer {
         int timeRemaining;
         bool isAvailable;
     public:
-        WebServer() : currentRequest(nullptr), timeRemaining(0), isAvailable(true) {}
-        bool getAvailability() const { return isAvailable; }
-        int getTimeRemaining() const { return timeRemaining; }
-        void assignRequest(Request* req) {
-            currentRequest = req;
-            isAvailable = False;
-            timeRemaining = currentRequest->getProcessingTime;
-        }
-        void tick() {
-            if (!isAvailable) {
-                --timeRemaining;
-                if (timeRemaining == 0) {
-                    isAvailable = True;
-                    currentRequest = nullptr;
-                }
-            }
-        }
+        WebServer();
+        bool getAvailability() const;
+        int getTimeRemaining() const;
+        void assignRequest(Request* req);
+        void tick();
 };
 
 #endif

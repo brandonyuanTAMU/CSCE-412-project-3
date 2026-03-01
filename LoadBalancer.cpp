@@ -69,7 +69,6 @@ void LoadBalancer::tick() {
             }
         }
     }
-    assignRequests();
     if (time - lastAdjustedTime >= adjustCooldown) {
         if (requests.size() > 80 * servers.size()) {
             addServer();
@@ -79,6 +78,7 @@ void LoadBalancer::tick() {
             lastAdjustedTime = time;
         }
     }
+    assignRequests();
 }
 
 void LoadBalancer::end() {

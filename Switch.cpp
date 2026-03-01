@@ -1,7 +1,7 @@
 #include "Switch.h"
 
 Switch::Switch(int pServers, int sServers, int cooldown, const std::string& logfile, const std::vector<std::string>& blockedIPs)
-    : processingLB(pServers, cooldown, logfile, blockedIPs), streamingLB(sServers, cooldown, logfile, blockedIPs) {}
+    : processingLB(pServers, cooldown, logfile, blockedIPs, "Processing"), streamingLB(sServers, cooldown, logfile, blockedIPs, "Streaming") {}
 
 void Switch::addRequest(const Request& req) {
     if (req.getRequestType() == 'P') {

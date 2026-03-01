@@ -10,6 +10,7 @@
 
 class LoadBalancer {
     private:
+        std::string name;
         std::queue<Request> requests;
         std::vector<WebServer> servers;
         int time;
@@ -24,7 +25,7 @@ class LoadBalancer {
 
         void logEvent(const std::string& event) const;
     public:
-        LoadBalancer(int initialservers, int cooldown, const std::string& logfile, const std::vector<std::string>& blockedips);
+        LoadBalancer(int initialservers, int cooldown, const std::string& logfile, const std::vector<std::string>& blockedips, const std::string& name);
         void tick();
         void addRequest(const Request& req);
         void end();

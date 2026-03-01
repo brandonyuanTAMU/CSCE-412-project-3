@@ -17,12 +17,12 @@ std::string randomIP() {
            std::to_string(rand() % 256);
 }
 
-// generates a random request
-Request randomRequest(int currentTime, int duration) {
+// generates a random request, tries to simulate bursts of requests realistically
+Request randomRequest(int duration) {
     std::string ipIn = randomIP();
     std::string ipOut = randomIP();
-    int arrivalTime = currentTime + rand() % duration;
-    int processingTime = 1 + rand() % 10;
+    int arrivalTime = 1 + rand() % (duration / 10); 
+    int processingTime = 1 + rand() % 100;          
     char type = (rand() % 2 == 0) ? 'P' : 'S';
     return Request(arrivalTime, processingTime, ipIn, ipOut, type);
 }
@@ -67,7 +67,7 @@ int main() {
     std::vector<Request> masterQueue;
     masterQueue.reserve(totalServers * 100);
     for (int i = 0; i < totalServers * 100; i++) {
-        masterQueue.push_back(randomRequest(0, duration));
+        masterQueue.push_back(randomRequest(duration));
     }
 
     // main loop
@@ -76,6 +76,9 @@ int main() {
             if (req.getArrivalTime() == t) {
                 sw.addRequest(req);
             }
+        }
+        if (t % 50 == 0) {  // adding random requests to keep loop from going empty
+            sw.addRequest(randomRequest(duration));
         }
         sw.tick();
     }

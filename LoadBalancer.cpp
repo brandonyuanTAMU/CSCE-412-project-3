@@ -5,8 +5,8 @@
 #include <iostream>
 #include <fstream>
 
-LoadBalancer::LoadBalancer(int initservers, int cooldown, const std::string& logfile, const std::vector<std::string>& blockedips)
-    : time(0), lastAdjustedTime(0), adjustCooldown(cooldown), logfile(logfile), blockedIPs(blockedips) {
+LoadBalancer::LoadBalancer(int initservers, int cooldown, const std::string& logfile, const std::vector<std::string>& blockedips, const std::string& name)
+    : time(0), lastAdjustedTime(0), adjustCooldown(cooldown), logfile(logfile), blockedIPs(blockedips), name(name) {
     for (int i=0; i<initservers; ++i) {
         servers.push_back(WebServer());
     }
@@ -15,11 +15,11 @@ LoadBalancer::LoadBalancer(int initservers, int cooldown, const std::string& log
 
 // private functions
 void LoadBalancer::logEvent(const std::string& event) const {
-    std::cout << "[t=" << time << "] " << event << "\n";
+    std::cout << "[" << name << "][t=" << time << "] " << event << "\n";
 
     std::ofstream file(logfile, std::ios::app);
     if (file.is_open()) {
-        file << "[t=" << time << "] " << event << "\n";
+        file << "[" << name << "][t=" << time << "] " << event << "\n";
     }
 }
 

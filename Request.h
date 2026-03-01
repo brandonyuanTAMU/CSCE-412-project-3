@@ -12,6 +12,7 @@ class Request {
         char requestType;
 
     public:
+        Request() : arrivalTime(0), processingTime(0), ipIn(""), ipOut(""), requestType('P') {}
         Request(int atime, int ptime, const std::string& inip, const std::string& outip, char reqtype) :
             arrivalTime(atime), processingTime(ptime), ipIn(inip), ipOut(outip), requestType(reqtype) {}
         int getArrivalTime() const { return arrivalTime; }

@@ -5,15 +5,15 @@
 
 class WebServer {
     private:
-        Request* currentRequest;
+        Request currentRequest;
         int timeRemaining;
         bool isAvailable;
     public:
         WebServer();
         bool getAvailability() const;
         int getTimeRemaining() const;
-        void assignRequest(Request* req);
-        void tick();
+        void assignRequest(Request req);
+        bool tick();
 };
 
 #endif

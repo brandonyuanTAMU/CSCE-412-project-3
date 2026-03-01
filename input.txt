@@ -1,0 +1,6 @@
+servers_p=5
+servers_s=5
+duration=10000
+cooldown=100
+logfile=log.txt
+blocked=192.168.1.,10.0.0.

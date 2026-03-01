@@ -12,7 +12,7 @@ class WebServer {
         WebServer();
         bool getAvailability() const;
         int getTimeRemaining() const;
-        void assignRequest(Request req);
+        void assignRequest(const Request req);
         bool tick();
 };
 

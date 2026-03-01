@@ -10,7 +10,7 @@ int WebServer::getTimeRemaining() const {
     return timeRemaining;
 }
 
-void WebServer::assignRequest(Request req) {
+void WebServer::assignRequest(const Request req) {
     currentRequest = req;
     isAvailable = false;
     timeRemaining = req.getProcessingTime();

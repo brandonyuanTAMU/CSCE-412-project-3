@@ -29,7 +29,7 @@ void LoadBalancer::addServer() {
 }
 
 void LoadBalancer::removeServer() {
-    for (int i = 0; i < servers.size(); i++) {
+    for (size_t i = 0; i < servers.size(); i++) {
         if (servers[i].getAvailability()) {
             servers.erase(servers.begin() + i);
             logEvent("Server removed, total servers: " + std::to_string(servers.size()));

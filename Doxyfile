@@ -1,0 +1,26 @@
+# Doxyfile for CSCE 412 Project 3 - Load Balancer Simulation
+
+PROJECT_NAME           = "Load Balancer Simulation"
+PROJECT_BRIEF          = "CSCE 412 Project 3 - Web Request Load Balancer"
+PROJECT_NUMBER         = "1.0"
+
+OUTPUT_DIRECTORY       = docs
+INPUT                  = .
+FILE_PATTERNS          = *.cpp *.h
+RECURSIVE              = NO
+
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = NO
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+
+HAVE_DOT               = NO
+CLASS_DIAGRAMS         = YES
+
+OPTIMIZE_OUTPUT_FOR_C  = NO

@@ -1,3 +1,22 @@
+/**
+ * @file main.cpp
+ * @brief Entry point for the Load Balancer Simulation.
+ *
+ * Reads configuration from input.txt, generates a master queue of requests
+ * using sine-wave modulated traffic patterns, and runs the simulation
+ * through a Switch that routes requests to type-specific load balancers.
+ *
+ * @section config Configuration File Format (input.txt)
+ * @code
+ * servers_p=5
+ * servers_s=5
+ * duration=10000
+ * cooldown=100
+ * logfile=log.txt
+ * blocked=192.168.1.,10.0.0.
+ * @endcode
+ */
+
 #include "Switch.h"
 #include "Request.h"
 
@@ -12,10 +31,13 @@
 #include <algorithm>
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846  ///< Pi constant (fallback if not defined by cmath)
 #endif
 
-// generates a random IP
+/**
+ * @brief Generates a random IPv4 address string.
+ * @return A string in the format "X.X.X.X" where each octet is 0-255.
+ */
 std::string randomIP() {
     return std::to_string(rand() % 256) + "." +
            std::to_string(rand() % 256) + "." +
@@ -23,7 +45,20 @@ std::string randomIP() {
            std::to_string(rand() % 256);
 }
 
-// generates master queue with sine-wave traffic to simulate realistic bursts and lulls
+/**
+ * @brief Generates the master queue of requests with sine-wave traffic patterns.
+ *
+ * The queue is built in two phases:
+ * - **Phase 1**: An initial "full queue" of `totalServers * 100` requests at t=1.
+ * - **Phase 2**: Ongoing traffic modulated by overlapping sine waves, creating
+ *   4 major burst cycles and 9 smaller ripples. Arrivals only occur when the
+ *   sine wave is positive (~half the time), allowing the queue to drain during
+ *   quiet periods and triggering dynamic server scaling.
+ *
+ * @param masterQueue Reference to the vector to populate with requests.
+ * @param totalServers Total number of servers across all load balancers.
+ * @param duration Total simulation duration in clock cycles.
+ */
 void generateMasterQueue(std::vector<Request>& masterQueue, int totalServers, int duration) {
     int initialQueueSize = totalServers * 100;  // spec: "usually servers * 100"
 
@@ -66,6 +101,15 @@ void generateMasterQueue(std::vector<Request>& masterQueue, int totalServers, in
     }
 }
 
+/**
+ * @brief Main entry point for the load balancer simulation.
+ *
+ * Reads configuration from input.txt, creates a Switch with Processing
+ * and Streaming load balancers, generates the master request queue,
+ * and runs the simulation loop for the configured duration.
+ *
+ * @return 0 on success, 1 if configuration file cannot be opened.
+ */
 int main() {
     srand(time(nullptr));
     std::ifstream config("input.txt");
@@ -78,6 +122,7 @@ int main() {
     std::string logfile = "log.txt";
     std::vector<std::string> blockedIPs;
 
+    // Parse configuration file (key=value format)
     std::string line;
     while (std::getline(config, line)) {
         std::istringstream ss(line);
@@ -98,15 +143,15 @@ int main() {
         }
     }
 
-    // switch obj for sorting req types
+    // Create switch with Processing and Streaming load balancers
     Switch sw(serversP, serversS, cooldown, logfile, blockedIPs);
 
-    // "master" q contains all requests, will send to LB based on time
+    // Generate master queue of all requests with arrival times
     int totalServers = serversP + serversS;
     std::vector<Request> masterQueue;
     generateMasterQueue(masterQueue, totalServers, duration);
 
-    // main loop
+    // Main simulation loop: inject requests at their arrival times and tick
     for (int t = 1; t <= duration; t++) {
         for (const Request& req : masterQueue) {
             if (req.getArrivalTime() == t) {
